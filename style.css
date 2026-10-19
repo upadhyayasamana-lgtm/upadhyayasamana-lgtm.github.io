@@ -1,0 +1,195 @@
+/* =============================================================
+   ZeroFit — shared site stylesheet
+   PROPOSED. Drop this in as `website/style.css` and link it from
+   every page in website/ before any page-specific <style> block.
+
+   Why this file exists: website/ currently contains no .css file at
+   all. All eleven pages carry their own inline CSS, so nothing
+   propagates and every change is ten hand-edits. Everything below is
+   the part that is genuinely shared. Page-specific components (the
+   readiness dial, the question stack, the comparison toggle, the
+   timer, the bedside picker) stay in the page that uses them.
+
+   Colour values are copied verbatim from DESIGN_SYSTEM.md on main.
+   If they ever disagree, DESIGN_SYSTEM.md wins and this file is wrong.
+   ============================================================= */
+
+/* ---------- 1 · tokens ---------- */
+:root{
+  --coral-50:#FFF1F1; --coral-500:#F96167; --coral-600:#E94550; --coral-700:#C8323D;
+  --navy-50:#EEF0F8; --navy-600:#2F3C7E; --navy-700:#283269; --navy-800:#202851; --navy-900:#1A2142;
+  --gold-300:#F9E795; --teal-400:#26B5CE; --teal-700:#166276;
+  --page:#FBFBFD; --card:#FFFFFF; --sunken:#F4F5FA;
+  --text:#1A2142; --body:#3C4673; --muted:#6B7299; --line:#E7E9F2;
+  --g-energy:linear-gradient(135deg,#F96167 0%,#F9E795 100%);
+  --g-calm:linear-gradient(165deg,#2F3C7E 0%,#1A2142 100%);
+
+  /* Radii: three values only. The live site currently uses nine
+     (999/50%/42/33/28/20/15/13/9px), which is what "assembled over
+     time" looks like. Circles use 50% directly; the 38/28px on the
+     hero phone are a physical device bezel, not UI, and are allowed
+     to stay in the homepage block. */
+  --r-sm:12px; --r-md:20px; --r-pill:999px;
+}
+
+/* ---------- 2 · base ---------- */
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Hanken Grotesk",-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--page);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-weight:800;letter-spacing:-.02em;line-height:1.1}
+h1{font-size:clamp(2.4rem,5.2vw,4rem)}
+h2{font-size:clamp(1.8rem,3.4vw,2.7rem)}
+h3{font-size:1.15rem}
+p{color:var(--body)}
+a{color:var(--teal-700)}
+img,video{max-width:100%}
+
+/* Space Grotesk is for NUMBERS ONLY (timers, stats, counts) per
+   DESIGN_SYSTEM.md §2. Never for prose. */
+.num{font-family:"Space Grotesk",monospace;font-weight:700;font-variant-numeric:tabular-nums}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+section{padding:96px 0;position:relative;overflow:hidden}
+.fine{font-size:.85rem;color:var(--muted)}
+/* Founder offer line (#58): /talk/ and the homepage CTA band share it. */
+.offer{font-size:1rem;color:var(--text);font-weight:600;background:var(--sunken);border-radius:var(--r-sm);padding:12px 16px;margin:0 0 34px}
+.cta .offer{display:inline-block;margin:0 0 24px;background:rgba(255,255,255,.78)}
+.lede{font-size:1.18rem;color:var(--body);max-width:56ch}
+
+/* ---------- 3 · band system ----------
+   Not alternation for its own sake. The rule:
+     light  (--page / .band-tint white) = explanation
+     .band-dark   (--g-calm navy)       = a product surface, or the
+                                          one "serious evidence" moment
+     .band-energy (coral -> gold)       = conversion, ONCE, closing CTA
+   Never two dark bands adjacent. DESIGN_SYSTEM.md restricts the energy
+   gradient to the press-play ring and the closing band. */
+.band-tint{background:var(--card)}
+.band-dark{background:var(--g-calm);color:#fff}
+.band-dark h1,.band-dark h2,.band-dark h3{color:#fff}
+.band-dark p{color:rgba(255,255,255,.80)}
+.band-dark a{color:var(--teal-400)}
+.band-energy{background:var(--g-energy)}
+
+/* ---------- 4 · buttons & chips ---------- */
+.btn{display:inline-block;background:var(--coral-500);color:#fff;font-weight:700;font-size:1rem;
+  padding:16px 34px;border-radius:var(--r-pill);border:0;cursor:pointer;text-decoration:none;
+  font-family:inherit;box-shadow:0 8px 26px rgba(249,97,103,.34);
+  transition:transform .18s,box-shadow .18s,background .18s}
+.btn:hover{background:var(--coral-600);transform:translateY(-2px);box-shadow:0 12px 32px rgba(249,97,103,.42)}
+.btn:focus-visible{outline:3px solid var(--navy-600);outline-offset:3px}
+.btn-dark{background:var(--navy-900);box-shadow:0 8px 26px rgba(26,33,66,.30)}
+.btn-dark:hover{background:var(--navy-800)}
+
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.78rem;font-weight:700;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--coral-700);
+  background:var(--coral-50);padding:8px 16px;border-radius:var(--r-pill)}
+.band-dark .eyebrow{background:rgba(38,181,206,.18);color:var(--teal-400)}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:28px;
+  transition:transform .25s,box-shadow .25s}
+.card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(26,33,66,.10)}
+
+/* ---------- 5 · nav ---------- */
+nav{position:sticky;top:0;z-index:60;background:rgba(251,251,253,.86);
+  backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:66px}
+.logo{font-weight:800;font-size:1.3rem;letter-spacing:-.02em;text-decoration:none;color:var(--text)}
+.logo span{color:var(--coral-500)}
+.nav-wm{height:26px;display:block}
+.navlinks{display:flex;gap:28px;align-items:center}
+.navlinks a{color:var(--body);text-decoration:none;font-weight:600;font-size:.94rem}
+.navlinks a:hover{color:var(--coral-600)}
+.nav-cta{background:var(--coral-500);color:#fff!important;padding:10px 20px;border-radius:var(--r-pill)}
+.nav-cta:hover{background:var(--coral-600)}
+@media(max-width:860px){.navlinks a:not(.nav-cta){display:none}}
+
+/* ---------- 6 · footer ---------- */
+footer{background:var(--navy-900);color:rgba(255,255,255,.72);padding:56px 0 30px}
+/* Kit has no standalone white wordmark (flagged on #13), so the footer
+   pairs the rounded icon with white text. */
+.fbrand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.3rem;letter-spacing:-.02em;color:#fff}
+.fbrand img{width:34px;height:34px;border-radius:9px}
+.fbrand span{color:var(--coral-500)}
+footer .cols{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:34px}
+@media(max-width:860px){footer .cols{grid-template-columns:1fr 1fr}}
+footer .logo{color:#fff}
+footer h4{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(255,255,255,.48);margin-bottom:13px}
+footer a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:.93rem;margin-bottom:8px}
+footer a:hover{color:#fff}
+.footer-bar{border-top:1px solid rgba(255,255,255,.13);margin-top:38px;padding-top:22px;
+  display:flex;justify-content:space-between;gap:16px;font-size:.85rem;flex-wrap:wrap}
+
+/* ---------- 7 · article / prose ----------
+   For website/blog/*.html and website/legal/*.html. These pages are
+   the reason a shared sheet pays for itself: seven of them repeat the
+   same prose styling today. */
+.prose{max-width:68ch;margin:0 auto}
+.prose h1{font-size:2.25rem;margin:14px 0 8px;line-height:1.12}
+.prose h2{font-size:1.6rem;margin:44px 0 14px}
+.prose h3{font-size:1.2rem;margin:32px 0 10px}
+.prose p{margin-bottom:18px;font-size:1.05rem}
+.prose ul,.prose ol{margin:0 0 22px 22px}
+.prose li{margin-bottom:10px;color:var(--body)}
+.prose li b,.prose li strong{color:var(--text)}
+.prose a{color:var(--teal-700);text-decoration:underline;text-underline-offset:2px}
+.prose blockquote{border-left:3px solid var(--coral-500);padding:4px 0 4px 20px;
+  margin:26px 0;color:var(--text);font-weight:600}
+.prose hr{border:0;border-top:1px solid var(--line);margin:38px 0}
+.article-meta{font-family:"Space Grotesk",monospace;font-size:.87rem;color:var(--muted);margin-bottom:8px}
+.disclaimer{margin-top:44px;padding-top:22px;border-top:1px solid var(--line);
+  font-size:.88rem;color:var(--muted);font-style:italic}
+/* Vertical rhythm for article/legal pages (side padding comes from .wrap). */
+.article-page{padding:34px 0 90px}
+/* Blog CTA card — every article ends with one. A card, not a pull quote,
+   so it overrides the generic prose blockquote. */
+.prose blockquote.cta{background:var(--card);border:1px solid var(--line);
+  border-left:3px solid var(--coral-500);border-radius:var(--r-sm);
+  margin:30px 0 0;padding:18px 22px;font-weight:400}
+.prose blockquote.cta p{margin:0;font-size:1rem;color:var(--text)}
+/* Parked trade-off (Samana 2026-08-12, decide in phase 3): the blog and
+   legal pages keep their sentence-case eyebrow. Delete these two lines to
+   adopt the uppercase shell eyebrow site-wide. */
+.blog .eyebrow{text-transform:none;letter-spacing:0;font-size:13px}
+
+/* ---------- 8 · motion ----------
+   Five hand-written keyframes, no library. MoveKind achieves its
+   "alive at rest" feel with exactly this much. Do not import a
+   motion library for it. */
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.18);opacity:.8}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(18px,-14px)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+
+.blob{position:absolute;border-radius:50%;filter:blur(58px);pointer-events:none;z-index:0;
+  animation:breathe 8s ease-in-out infinite}
+.b-coral{background:rgba(249,97,103,.30)}
+.b-gold{background:rgba(249,231,149,.50)}
+.b-teal{background:rgba(38,181,206,.22)}
+
+/* on-load stagger */
+.anim{opacity:0;animation:fadeInUp .8s cubic-bezier(.22,1,.36,1) forwards}
+.d1{animation-delay:.10s}.d2{animation-delay:.20s}.d3{animation-delay:.30s}
+.d4{animation-delay:.40s}.d5{animation-delay:.50s}.d6{animation-delay:.60s}
+
+/* scroll reveal — see the observer snippet in IMPLEMENTATION.md §5.
+   The fail-safe must be armed by a real scroll, never an unconditional
+   timer (that was the #58 bug: 30/30 elements fired off-screen at 2.5s). */
+.reveal{opacity:0;transform:translateY(22px);
+  transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- 9 · accessibility ---------- */
+:focus-visible{outline:3px solid var(--coral-500);outline-offset:2px}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:24px;top:12px;z-index:100;background:var(--card);
+  padding:10px 18px;border-radius:var(--r-sm);border:2px solid var(--coral-500)}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .anim,.reveal{opacity:1!important;transform:none!important}
+}
